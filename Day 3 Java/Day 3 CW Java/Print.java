@@ -1,0 +1,7 @@
+import java.lang.*;
+import java.util.*;
+
+public class Print {
+	public static void main(String[] args) {		System.out.println("Welcome to Java");
+	}
+}
