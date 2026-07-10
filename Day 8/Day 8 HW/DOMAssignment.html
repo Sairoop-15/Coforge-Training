@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<style>
+.myStyle {
+    color: red;
+    font-size: 30px;
+    font-weight: bold;
+}
+</style>
+
+<script>
+
+function domUpdate() {
+	var element = document.getElementById("id1");
+	element.textContent = "Welcome to Java Script DOM";
+}
+
+function styleChange() {
+	var element = document.getElementById("id1");
+	element.classList.add("myStyle");
+}
+
+
+function changeImage() {
+    document.getElementById("image").src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-rTdT2WX-YerT0ldO_FyTb_NKUhhniDuZrrD5FNJlHA&s=10";
+}
+
+function hideParagraph() {
+    document.getElementById("para").style.display = "none";
+}
+
+function showParagraph() {
+    document.getElementById("para").style.display = "block";
+}
+
+function increaseFont() {
+    document.getElementById("fontPara").style.fontSize = "28px";
+}
+</script>
+
+</head>
+<body>
+<h1 id = "id1">Welcome</h1>
+<button onClick = "domUpdate()">Click for Updation</button>
+<button onClick = "styleChange()">Click for Color Change</button>
+<img id="image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE6kJNbOdTh7CJim_pJdlLOBn-tZ7UGSJS-H9CTzautg&s=10">
+    <br><br>
+    <button onclick="changeImage()">Change Image</button>
+
+
+    <p id="para">
+        This paragraph can be hidden and shown using the buttons below.
+    </p>
+
+    <button onclick="hideParagraph()">Hide Paragraph</button>
+    <button onclick="showParagraph()">Show Paragraph</button>
+
+    <hr>
+
+    <p id="fontPara">
+        Click the button below to increase my font size.
+    </p>
+
+    <button onclick="increaseFont()">Increase Font Size</button>
+</body>
+</html>

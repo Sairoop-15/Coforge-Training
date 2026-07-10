@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script>
+
+function factorial() {
+	var n = Number(document.getElementById("n").value);
+	var val = 1;
+	for(let i = 1; i <= n; i++){
+		val = val * i;
+		let p = document.createElement("p");
+		 p.innerHTML = "<b>" + i + "! = " + val + "</b>";
+		document.body.appendChild(p);
+	}
+}
+
+</script>
+
+</head>
+<body>
+n <input type = "number" id = "n"/>
+<button onClick = "factorial()">Calculate</button>
+</body>
+</html>

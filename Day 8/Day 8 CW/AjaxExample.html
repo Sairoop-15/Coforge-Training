@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Registration Form</title>
+
+<script>
+
+function passwordStrength() {
+	var password = document.getElementById("pwd").value;
+	var req = new XMLHttpRequest();
+	req.open("GET","http://localhost:8080/MyWebApplication/PasswordStrengthServlets?pwd="+password);
+	
+	req.onreadystatechange = function() {
+		if(req.readyState == 4 && req.status == 200) {
+			document.getElementById("result").innerHTML = req.responseText;
+		}
+	};
+	req.send();
+}
+
+</script>
+
+</head>
+<body>
+
+<table border="1" cellpadding = 8px
+       style="width:800px; margin:auto; padding : 20px;">
+
+    <tr>
+        <th colspan="2" style="font-size:32px; padding:15px;">
+            Registration Form
+        </th>
+    </tr>
+
+    <tr>
+        <td style="width:40%;">Student Name</td>
+        <td>
+            <input type="text" style="width:200px;">
+        </td>
+    </tr>
+
+    <tr>
+        <td>Father's Name</td>
+        <td>
+            <input type="text" style="width:200px;">
+        </td>
+    </tr>
+
+    <tr>
+        <td>Mother's Name</td>
+        <td>
+            <input type="text" style="width:200px;">
+        </td>
+    </tr>
+
+    <tr>
+        <td>Date of Birth</td>
+        <td>
+            <input type="date">
+        </td>
+    </tr>
+
+    <tr>
+        <td>Gender</td>
+        <td>
+            <input type="radio" name="gender">Male
+            <input type="radio" name="gender">Female
+        </td>
+    </tr>
+
+    <tr>
+        <td>Email ID</td>
+        <td>
+            <input type="email" style="width:200px;">
+        </td>
+    </tr>	
+	    
+    <tr>
+        <td>Password</td>
+        <td>
+            <input type="password" style="width:200px;" id = "pwd" onkeyup="passwordStrength()"/><span id  = "result"></span>
+        </td>
+    </tr>
+	
+	
+    <tr>
+        <td>Mobile No.</td>
+        <td>
+            <input type="tel" style="width:200px;">
+        </td>
+    </tr>
+
+    <tr>
+        <td>Address</td>
+        <td>
+            <textarea rows="5" cols="25"></textarea>
+        </td>
+    </tr>
+
+    <tr>
+        <td>State</td>
+        <td>
+            <input type="text" style="width:200px;">
+        </td>
+    </tr>
+
+    <tr>
+        <td>City</td>
+        <td>
+            <input type="text" style="width:200px;">
+        </td>
+    </tr>
+
+    <tr>
+        <td></td>
+        <td>
+            <input type="submit" value="Submit">
+        </td>
+    </tr>
+
+</table>
+
+</body>
+</html>
