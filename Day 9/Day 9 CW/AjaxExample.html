@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Registration Form</title>
+
+<script>
+
+function passwordStrength() {
+    var password = document.getElementById("pwd").value;
+
+    var req = new XMLHttpRequest();
+
+    req.open(
+        "GET",
+        "http://localhost:8081/MyWebApplication/PasswordStrengthServlets?pwd=" +
+        encodeURIComponent(password),
+        true
+    );
+
+    req.onreadystatechange = function() {
+        if (req.readyState == 4 && req.status == 200) {
+            document.getElementById("result").innerHTML = req.responseText;
+        }
+    };
+
+    req.send();
+}
+
+function checkEmail() {
+
+    var email = document.getElementById("mailId").value;
+
+    var req = new XMLHttpRequest();
+
+    req.open(
+        "GET",
+        "http://localhost:8081/MyWebApplication/EmailCheckServlet?mailId=" +
+        encodeURIComponent(email),
+        true
+    );
+
+    req.onreadystatechange = function() {
+        if (req.readyState == 4 && req.status == 200) {
+            document.getElementById("emailResult").innerHTML = req.responseText;
+        }
+    };
+
+    req.send();
+}
+
+</script>
+
+</head>
+
+<body>
+
+<table border="1" cellpadding="8"
+style="width:800px; margin:auto;">
+
+<tr>
+    <th colspan="2">Registration Form</th>
+</tr>
+
+<tr>
+    <td>Student Name</td>
+    <td><input type="text"></td>
+</tr>
+
+<tr>
+    <td>Father's Name</td>
+    <td><input type="text"></td>
+</tr>
+
+<tr>
+    <td>Mother's Name</td>
+    <td><input type="text"></td>
+</tr>
+
+<tr>
+    <td>Date of Birth</td>
+    <td><input type="date"></td>
+</tr>
+
+<tr>
+    <td>Gender</td>
+    <td>
+        <input type="radio" name="gender">Male
+        <input type="radio" name="gender">Female
+    </td>
+</tr>
+
+<tr>
+    <td>Email ID</td>
+    <td>
+        <input type="email"
+               id="mailId"
+               onkeyup="checkEmail()">
+        <span id="emailResult"></span>
+    </td>
+</tr>
+
+<tr>
+    <td>Password</td>
+    <td>
+        <input type="password"
+               id="pwd"
+               onkeyup="passwordStrength()">
+        <span id="result"></span>
+    </td>
+</tr>
+
+<tr>
+    <td>Mobile No.</td>
+    <td><input type="tel"></td>
+</tr>
+
+<tr>
+    <td>Address</td>
+    <td><textarea rows="5" cols="25"></textarea></td>
+</tr>
+
+<tr>
+    <td>State</td>
+    <td><input type="text"></td>
+</tr>
+
+<tr>
+    <td>City</td>
+    <td><input type="text"></td>
+</tr>
+
+<tr>
+    <td></td>
+    <td><input type="submit" value="Submit"></td>
+</tr>
+
+</table>
+
+</body>
+</html>
