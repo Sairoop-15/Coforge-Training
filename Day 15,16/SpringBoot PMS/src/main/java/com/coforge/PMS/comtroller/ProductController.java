@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.coforge.PMS.exception.InvalidProductObjectException;
-import com.coforge.PMS.exception.ProductNotFoundException;
 import com.coforge.PMS.model.Product;
 import com.coforge.PMS.service.ProductService;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/api/v1/pms")
@@ -36,87 +37,37 @@ public class ProductController {
 	}
 
 	@PostMapping("/products")
-	public ResponseEntity<String> saveProduct(@RequestBody Product product) {
+	public ResponseEntity<String> saveProduct(@Valid @NotNull @RequestBody Product product) {
 
 		ResponseEntity<String> responseEntity = null;
-
-		try {
-
-			boolean status = service.saveProduct(product);
-
-			if (status)
-				responseEntity = new ResponseEntity<>(environment.getProperty("pms.save.success"),
-						HttpStatus.CREATED);
-
-		} catch (InvalidProductObjectException e) {
-
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-
-		} catch (Exception e) {
-			responseEntity = new ResponseEntity<>(e.toString(),
-					HttpStatus.BAD_REQUEST);
-		}
-
+		boolean status = service.saveProduct(product);
+		if (status)
+			responseEntity = new ResponseEntity<>(environment.getProperty("pms.save.success"), HttpStatus.CREATED);
 		return responseEntity;
 	}
 
 	@PutMapping("/products/{pid}")
-	public ResponseEntity<String> updateProduct(@PathVariable("pid") int pid,
-			@RequestBody Product product) {
+	public ResponseEntity<String> updateProduct(@Valid @NotNull @PathVariable("pid") int pid, @RequestBody Product product) {
 
 		ResponseEntity<String> responseEntity = null;
 
-		try {
+		boolean status = service.updateProduct(pid, product);
 
-			boolean status = service.updateProduct(pid, product);
-
-			if (status)
-				responseEntity = new ResponseEntity<>(environment.getProperty("pms.update.success"),
-						HttpStatus.CREATED);
-
-		} catch (InvalidProductObjectException e) {
-
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-
-		} catch (ProductNotFoundException e) {
-
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-
-		} catch (Exception e) {
-
-			responseEntity = new ResponseEntity<>(environment.getProperty("pms.db.failed"),
-					HttpStatus.BAD_REQUEST);
-		}
+		if (status)
+			responseEntity = new ResponseEntity<>(environment.getProperty("pms.update.success"), HttpStatus.CREATED);
 
 		return responseEntity;
 	}
 
 	@DeleteMapping("/products/{pid}")
-	public ResponseEntity<String> deleteProduct(@PathVariable("pid") int pid) {
+	public ResponseEntity<String> deleteProduct(@Valid @NotNull @PathVariable("pid") int pid) {
 
 		ResponseEntity<String> responseEntity = null;
 
-		try {
+		boolean status = service.deleteProductById(pid);
 
-			boolean status = service.deleteProductById(pid);
-
-			if (status)
-				responseEntity = new ResponseEntity<>(environment.getProperty("pms.delete.success"),
-						HttpStatus.CREATED);
-
-		} catch (InvalidProductObjectException e) {
-
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-
-		} catch (ProductNotFoundException e) {
-
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-
-		} catch (Exception e) {
-
-			responseEntity = new ResponseEntity<>(environment.getProperty("pms.db.failed"),
-					HttpStatus.BAD_REQUEST);
-		}
+		if (status)
+			responseEntity = new ResponseEntity<>(environment.getProperty("pms.delete.success"), HttpStatus.CREATED);
 
 		return responseEntity;
 	}
@@ -125,28 +76,10 @@ public class ProductController {
 	public ResponseEntity<String> findByPid(@PathVariable("pid") int pid) {
 
 		ResponseEntity<String> responseEntity = null;
+		Optional<Product> product = service.findByPid(pid);
 
-		try {
-
-			Optional<Product> product = service.findByPid(pid);
-
-			if (product.isPresent())
-				responseEntity = new ResponseEntity<>(product.get().toString(), HttpStatus.OK);
-
-		} catch (InvalidProductObjectException e) {
-
-			responseEntity = new ResponseEntity<>(environment.getProperty("pms.db.failed"),
-					HttpStatus.BAD_REQUEST);
-
-		} catch (ProductNotFoundException e) {
-
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.NOT_FOUND);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			responseEntity = new ResponseEntity<>(environment.getProperty("pms.db.failed"),
-					HttpStatus.BAD_REQUEST);
-		}
+		if (product.isPresent())
+			responseEntity = new ResponseEntity<>(product.get().toString(), HttpStatus.OK);
 
 		return responseEntity;
 	}
@@ -156,18 +89,9 @@ public class ProductController {
 
 		ResponseEntity<?> responseEntity = null;
 
-		try {
+		Iterable<Product> products = service.findAllProducts();
 
-			Iterable<Product> products = service.findAllProducts();
-
-			responseEntity = new ResponseEntity<>(products, HttpStatus.OK);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			responseEntity = new ResponseEntity<>(environment.getProperty("pms.db.failed"),
-					HttpStatus.BAD_REQUEST);
-		}
-
+		responseEntity = new ResponseEntity<>(products, HttpStatus.OK);
 		return responseEntity;
 	}
 
@@ -175,56 +99,21 @@ public class ProductController {
 	public ResponseEntity<?> findByPname(@PathVariable("pname") String pname) {
 
 		ResponseEntity<?> responseEntity = null;
+		List<Product> products = service.findByproductName(pname);
 
-		try {
-
-			List<Product> products = service.findByproductName(pname);
-
-			responseEntity = new ResponseEntity<>(products, HttpStatus.OK);
-
-		} catch (InvalidProductObjectException e) {
-
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-
-		} catch (ProductNotFoundException e) {
-
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.NOT_FOUND);
-
-		} catch (Exception e) {
-
-			responseEntity = new ResponseEntity<>(environment.getProperty("pms.db.failed"),
-					HttpStatus.BAD_REQUEST);
-		}
+		responseEntity = new ResponseEntity<>(products, HttpStatus.OK);
 
 		return responseEntity;
 	}
 
 	@DeleteMapping("/products/pname/{pname}")
-	public ResponseEntity<?> deleteByPname(@PathVariable("pname") String pname) {
+	public ResponseEntity<?> deleteByPname(@Valid @NotNull @PathVariable("pname") String pname) {
 
 		ResponseEntity<?> responseEntity = null;
+		boolean status = service.deleteByProductName(pname);
 
-		try {
-
-			boolean status = service.deleteByProductName(pname);
-
-			if (status)
-				responseEntity = new ResponseEntity<>(environment.getProperty("pms.delete.success"),
-						HttpStatus.OK);
-
-		} catch (InvalidProductObjectException e) {
-
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-
-		} catch (ProductNotFoundException e) {
-
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.NOT_FOUND);
-
-		} catch (Exception e) {
-
-			responseEntity = new ResponseEntity<>(environment.getProperty("pms.db.failed"),
-					HttpStatus.BAD_REQUEST);
-		}
+		if (status)
+			responseEntity = new ResponseEntity<>(environment.getProperty("pms.delete.success"), HttpStatus.OK);
 
 		return responseEntity;
 	}
@@ -234,26 +123,9 @@ public class ProductController {
 
 		ResponseEntity<?> responseEntity = null;
 
-		try {
+		List<Product> products = service.findByproductQuantity(pquantity);
 
-			List<Product> products = service.findByproductQuantity(pquantity);
-
-			responseEntity = new ResponseEntity<>(products, HttpStatus.OK);
-
-		} catch (InvalidProductObjectException e) {
-
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-
-		} catch (ProductNotFoundException e) {
-
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.NOT_FOUND);
-
-		} catch (Exception e) {
-
-			responseEntity = new ResponseEntity<>(environment.getProperty("pms.db.failed"),
-					HttpStatus.BAD_REQUEST);
-		}
-
+		responseEntity = new ResponseEntity<>(products, HttpStatus.OK);
 		return responseEntity;
 	}
 
@@ -263,25 +135,9 @@ public class ProductController {
 
 		ResponseEntity<?> responseEntity = null;
 
-		try {
+		List<Product> products = service.findByPriceRange(minPrice, maxPrice);
 
-			List<Product> products = service.findByPriceRange(minPrice, maxPrice);
-
-			responseEntity = new ResponseEntity<>(products, HttpStatus.OK);
-
-		} catch (InvalidProductObjectException e) {
-
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-
-		} catch (ProductNotFoundException e) {
-
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.NOT_FOUND);
-
-		} catch (Exception e) {
-
-			responseEntity = new ResponseEntity<>(environment.getProperty("pms.db.failed"),
-					HttpStatus.BAD_REQUEST);
-		}
+		responseEntity = new ResponseEntity<>(products, HttpStatus.OK);
 
 		return responseEntity;
 	}
@@ -291,17 +147,9 @@ public class ProductController {
 
 		ResponseEntity<?> responseEntity = null;
 
-		try {
+		List<Integer> pids = service.getproductIdsList();
 
-			List<Integer> pids = service.getproductIdsList();
-
-			responseEntity = new ResponseEntity<>(pids, HttpStatus.OK);
-
-		} catch (Exception e) {
-
-			responseEntity = new ResponseEntity<>(environment.getProperty("pms.db.failed"),
-					HttpStatus.BAD_REQUEST);
-		}
+		responseEntity = new ResponseEntity<>(pids, HttpStatus.OK);
 
 		return responseEntity;
 	}
@@ -310,18 +158,9 @@ public class ProductController {
 	public ResponseEntity<?> getInfo() {
 
 		ResponseEntity<?> responseEntity = null;
+		String info = service.getInfo();
 
-		try {
-
-			String info = service.getInfo();
-
-			responseEntity = new ResponseEntity<>(info, HttpStatus.OK);
-
-		} catch (Exception e) {
-
-			responseEntity = new ResponseEntity<>(environment.getProperty("pms.db.failed"),
-					HttpStatus.BAD_REQUEST);
-		}
+		responseEntity = new ResponseEntity<>(info, HttpStatus.OK);
 
 		return responseEntity;
 	}

@@ -1,9 +1,8 @@
 package com.coforge.PMS.exception;
 
-public class InvalidProductObjectException extends Exception {
+public class InvalidProductObjectException extends RuntimeException {
 	
-	@Override
-	public String toString() {
-		return "Invalid Product Object";
+	public InvalidProductObjectException(String errorMessage) {
+		super(errorMessage);
 	}
 }

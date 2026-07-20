@@ -9,19 +9,19 @@ import com.coforge.ems.model.Employee;
 
 public interface EmployeeService {
 
-	public boolean saveEmployee(Employee employee) throws InvalidEmployeeObjectException;
+	public boolean saveEmployee(Employee employee) ;
 
-	public boolean updateEmployee(int eid, Employee employee) throws InvalidEmployeeObjectException, EmployeeNotFoundException;
+	public boolean updateEmployee(int eid, Employee employee);
 
-	public boolean deleteByEid(int eid) throws InvalidEmployeeObjectException,  EmployeeNotFoundException;
+	public boolean deleteByEid(int eid);
 
-	public Optional<Employee> findByEid(int eid) throws EmployeeNotFoundException, InvalidEmployeeObjectException;
+	public Optional<Employee> findByEid(int eid);
 
 	public List<Employee> findAllEmployees();
 
-	public List<Employee> findByEname(String ename)throws InvalidEmployeeObjectException, EmployeeNotFoundException;
+	public List<Employee> findByEname(String ename);
 
-	public boolean deleteByEname(String ename)throws InvalidEmployeeObjectException, EmployeeNotFoundException;
+	public boolean deleteByEname(String ename);
 
 	public List<Integer> getEidsList();
 

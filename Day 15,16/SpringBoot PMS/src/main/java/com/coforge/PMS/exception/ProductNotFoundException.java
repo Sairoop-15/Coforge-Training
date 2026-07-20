@@ -1,10 +1,9 @@
 package com.coforge.PMS.exception;
 
-public class ProductNotFoundException extends Exception {
+public class ProductNotFoundException extends RuntimeException {
 	
-	@Override
-	public String toString() {
-		return "Product Not Found!";
+	public ProductNotFoundException(String errorMessage) {
+		super(errorMessage);
 	}
 
 }

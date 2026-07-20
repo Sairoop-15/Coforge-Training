@@ -10,14 +10,14 @@ import com.coforge.ems.model.Employee;
 
 @Repository
 public interface EmployeeRepo extends CrudRepository<Employee, Integer>{ // same as DAO 
-	public List<Employee> findByEname(String ename);
-	public int deleteByEmpName(String ename);
-	public List<Employee> findByDno(int dno);
-	public int deleteByDno(int dno);
+	public List<Employee> findByempName(String empName);
+	public int deleteByempName(String empName);
+	public List<Employee> findBydeptNo(int deptNo);
+	public int deleteBydeptNo(int deptNo);
 	
-	@Query("select eid from Employee")
+	@Query("select empId from Employee")
 	public List<Integer> getEids();
 	
-	@Query("select count(*), sum(esalary), min(esalary), max(esalary) from Employee")
+	@Query("select count(*), sum(empSalary), min(empSalary), max(empSalary) from Employee")
 	public String getInfo();
 }

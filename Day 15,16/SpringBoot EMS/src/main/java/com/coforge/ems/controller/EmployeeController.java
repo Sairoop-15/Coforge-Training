@@ -16,12 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.coforge.ems.exception.EmployeeNotFoundException;
-import com.coforge.ems.exception.InvalidEmployeeObjectException;
 import com.coforge.ems.model.Employee;
 import com.coforge.ems.service.EmployeeService;
 
-@RestController // @Controller + @ReponseBody
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
+@RestController // @Controller + @ResponseBody
 @RequestMapping("/api/v1/ems")
 public class EmployeeController {
 
@@ -36,159 +37,65 @@ public class EmployeeController {
 	}
 
 	@PostMapping("/employees")
-	public ResponseEntity<String> saveEmployee(@RequestBody Employee employee) {
-		ResponseEntity<String> responseEntity = null;
-
-		try {
-			boolean status = service.saveEmployee(employee);
-			if (status)
-				responseEntity = new ResponseEntity<>(environment.getProperty("ems.save.success"), HttpStatus.CREATED);
-		} catch (InvalidEmployeeObjectException e) {
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-		} catch (Exception e) {
-			responseEntity = new ResponseEntity<>(environment.getProperty("ems.db.failed"), HttpStatus.BAD_REQUEST);
-		}
-
-		return responseEntity;
+	public ResponseEntity<String> saveEmployee(@NotNull @Valid @RequestBody Employee employee) {
+		boolean status = service.saveEmployee(employee);
+		if (status)
+			return new ResponseEntity<>(environment.getProperty("ems.save.success"), HttpStatus.CREATED);
+		return new ResponseEntity<>(environment.getProperty("ems.db.failed"), HttpStatus.BAD_REQUEST);
 	}
 
 	@PutMapping("/employees/{eid}")
-	public ResponseEntity<String> updateEmployee(@PathVariable("eid") int eid, @RequestBody Employee employee) {
-		ResponseEntity<String> responseEntity = null;
-
-		try {
-			boolean status = service.updateEmployee(eid, employee);
-			if (status)
-				responseEntity = new ResponseEntity<>(environment.getProperty("ems.update.success"),
-						HttpStatus.CREATED);
-		} catch (InvalidEmployeeObjectException e) {
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-		} catch (EmployeeNotFoundException e) {
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.NOT_FOUND);
-		} catch (Exception e) {
-			responseEntity = new ResponseEntity<>(environment.getProperty("ems.db.failed"), HttpStatus.BAD_REQUEST);
-		}
-
-		return responseEntity;
+	public ResponseEntity<String> updateEmployee(@NotNull @Valid @PathVariable("eid") int eid, @RequestBody Employee employee) {
+		boolean status = service.updateEmployee(eid, employee);
+		if (status)
+			return new ResponseEntity<>(environment.getProperty("ems.update.success"), HttpStatus.CREATED);
+		return new ResponseEntity<>(environment.getProperty("ems.db.failed"), HttpStatus.BAD_REQUEST);
 	}
 
 	@DeleteMapping("/employees/{eid}")
-	public ResponseEntity<String> deleteByEid(@PathVariable("eid") int eid) {
-		ResponseEntity<String> responseEntity = null;
-
-		try {
-			boolean status = service.deleteByEid(eid);
-			if (status)
-				responseEntity = new ResponseEntity<>(environment.getProperty("ems.delete.success"), HttpStatus.OK);
-		} catch (EmployeeNotFoundException e) {
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.NOT_FOUND);
-		} catch (InvalidEmployeeObjectException e) {
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-		} catch (Exception e) {
-			responseEntity = new ResponseEntity<>(environment.getProperty("ems.db.failed"), HttpStatus.BAD_REQUEST);
-		}
-
-		return responseEntity;
+	public ResponseEntity<String> deleteByEid(@NotNull @Valid @PathVariable("eid") int eid) {
+		boolean status = service.deleteByEid(eid);
+		if (status)
+			return new ResponseEntity<>(environment.getProperty("ems.delete.success"), HttpStatus.OK);
+		return new ResponseEntity<>(environment.getProperty("ems.db.failed"), HttpStatus.BAD_REQUEST);
 	}
 
 	@GetMapping("/employees/{eid}")
 	public ResponseEntity<?> findByEid(@PathVariable("eid") int eid) {
-		ResponseEntity<?> responseEntity = null;
-
-		try {
-			Optional<Employee> employee = service.findByEid(eid);
-			if (employee.isPresent())
-				responseEntity = new ResponseEntity<>(employee.get(), HttpStatus.OK);
-		} catch (InvalidEmployeeObjectException e) {
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-		} catch (EmployeeNotFoundException e) {
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.NOT_FOUND);
-		} catch (Exception e) {
-			responseEntity = new ResponseEntity<>(environment.getProperty("ems.db.failed"), HttpStatus.BAD_REQUEST);
-		}
-
-		return responseEntity;
+		Optional<Employee> employee = service.findByEid(eid);
+		if (employee.isPresent())
+			return new ResponseEntity<>(employee.get(), HttpStatus.OK);
+		return new ResponseEntity<>(environment.getProperty("ems.db.failed"), HttpStatus.BAD_REQUEST);
 	}
 
 	@GetMapping("/employees")
 	public ResponseEntity<?> findAllEmployees() {
-		ResponseEntity<?> responseEntity = null;
-
-		try {
-			List<Employee> employees = service.findAllEmployees();
-			responseEntity = new ResponseEntity<>(employees, HttpStatus.OK);
-		} catch (Exception e) {
-			responseEntity = new ResponseEntity<>(environment.getProperty("ems.db.failed"), HttpStatus.BAD_REQUEST);
-		}
-
-		return responseEntity;
+		List<Employee> employees = service.findAllEmployees();
+		return new ResponseEntity<>(employees, HttpStatus.OK);
 	}
 
 	@GetMapping("/employees/ename/{ename}")
 	public ResponseEntity<?> findByEname(@PathVariable("ename") String ename) {
-		ResponseEntity<?> responseEntity = null;
-
-		try {
-			List<Employee> employees = service.findByEname(ename);
-			responseEntity = new ResponseEntity<>(employees, HttpStatus.OK);
-		} catch (InvalidEmployeeObjectException e) {
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-		} catch (EmployeeNotFoundException e) {
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.NOT_FOUND);
-		} catch (Exception e) {
-			responseEntity = new ResponseEntity<>(environment.getProperty("ems.db.failed"), HttpStatus.BAD_REQUEST);
-		}
-
-		return responseEntity;
+		List<Employee> employees = service.findByEname(ename);
+		return new ResponseEntity<>(employees, HttpStatus.OK);
 	}
-	
-	
+
 	@DeleteMapping("/employees/ename/{ename}")
-	public ResponseEntity<?> deleteByEname(@PathVariable("ename") String ename) {
-		ResponseEntity<?> responseEntity = null;
-
-		try {
-			boolean status = service.deleteByEmpName(ename);
-			responseEntity = new ResponseEntity<>(environment.getProperty("ems.delete.success"), HttpStatus.OK);
-		} catch (InvalidEmployeeObjectException e) {
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-		}catch (EmployeeNotFoundException e) {
-			responseEntity = new ResponseEntity<>(e.toString(), HttpStatus.NOT_FOUND);
-		}catch (Exception e) {
-			responseEntity = new ResponseEntity<>(environment.getProperty("ems.db.failed"), HttpStatus.BAD_REQUEST);
-		}
-
-		return responseEntity;
+	public ResponseEntity<?> deleteByEname(@NotNull @Valid @PathVariable("ename") String ename) {
+		service.deleteByEname(ename);
+		return new ResponseEntity<>(environment.getProperty("ems.delete.success"), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/employees/eids")
-	public ResponseEntity<?> getEidsList(){
-		ResponseEntity<?> responseEntity = null;
-		
-		try {
+	public ResponseEntity<?> getEidsList() {
 		List<Integer> eids = service.getEidsList();
-		responseEntity = new ResponseEntity<>(eids, HttpStatus.OK);
-		}catch(Exception e) {
-			responseEntity = new ResponseEntity<>(environment.getProperty("ems.db.failed"), HttpStatus.BAD_REQUEST);
-		}
-		
-		return responseEntity;
+		return new ResponseEntity<>(eids, HttpStatus.OK);
 	}
-	
-	
+
 	@GetMapping("/employees/info")
-	public ResponseEntity<?> getInfo(){
-		ResponseEntity<?> responseEntity = null;
-		
-		try {
+	public ResponseEntity<?> getInfo() {
 		String info = service.getInfo();
-		responseEntity = new ResponseEntity<>(info, HttpStatus.OK);
-		}catch(Exception e) {
-			responseEntity = new ResponseEntity<>(environment.getProperty("ems.db.failed"), HttpStatus.BAD_REQUEST);
-		}
-		
-		return responseEntity;
+		return new ResponseEntity<>(info, HttpStatus.OK);
 	}
-	
 
 }

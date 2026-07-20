@@ -1,10 +1,9 @@
 package com.coforge.ems.exception;
 
-public class EmployeeNotFoundException extends Exception{
+public class EmployeeNotFoundException extends RuntimeException{
 	
-	@Override
-	public String toString() {
-		return  "FAILED : Employee Details NOT FOUND";
+	public  EmployeeNotFoundException(String errorMessage) {
+		super(errorMessage);
 	}
 
 }

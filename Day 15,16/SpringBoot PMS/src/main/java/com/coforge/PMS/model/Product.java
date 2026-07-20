@@ -4,22 +4,29 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 @Table(name = "tbl_product")
 public class Product {
 
 	@Id
+	@NotNull
 	@Column(name = "productId")
 	private int productId;
 
 	@Column(name = "productName")
+	@NotBlank
 	private String productName;
 
 	@Column(name = "productPrice")
+	@Positive
 	private int productPrice;
 
 	@Column(name = "productQuantity")
+	@Positive
 	private int productQuantity;
 
 	public int getProductId() {

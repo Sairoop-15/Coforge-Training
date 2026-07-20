@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,109 +15,86 @@ import com.coforge.ems.repo.EmployeeRepo;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-
+	Environment environment;
 	private EmployeeRepo repo;
 
 	@Autowired
-	public EmployeeServiceImpl(EmployeeRepo repo) {
+	public EmployeeServiceImpl(EmployeeRepo repo, Environment environment) {
 		super();
 		this.repo = repo;
+		this.environment = environment;
 	}
 
 	@Override
-	public boolean saveEmployee(Employee employee) throws InvalidEmployeeObjectException {
-
-		if (employee != null && employee.getEmpId() > 0 && employee.getEmpName() != null && employee.getEmpSalary() > 0
-				&& employee.getDeptNo() > 0) {
-			repo.save(employee);
-			return true;
-		} else {
-			throw new InvalidEmployeeObjectException();
-		}
-	}
-
-	public boolean updateEmployee(int eid, Employee employee)
-			throws InvalidEmployeeObjectException, EmployeeNotFoundException {
-		if (eid > 0 && employee != null && employee.getEmpId() > 0 && employee.getEmpName() != null
-				&& employee.getEmpSalary() > 0 && employee.getDeptNo() > 0) {
-			if (!repo.existsById(eid)) {
-				throw new EmployeeNotFoundException();
-			}
-			repo.save(employee); // save here works has update if record exist other!
-			return true;
-		} else {
-			throw new InvalidEmployeeObjectException();
-		}
+	public boolean saveEmployee(Employee employee) {
+		repo.save(employee);
+		return true;
 	}
 
 	@Override
-	public boolean deleteByEid(int eid) throws InvalidEmployeeObjectException, EmployeeNotFoundException {
-		if (eid > 0) {
-			if (!repo.existsById(eid)) {
-				throw new EmployeeNotFoundException();
-			}
-			repo.deleteById(eid);
-			return true;
-		} else {
-			throw new InvalidEmployeeObjectException();
+	public boolean updateEmployee(int eid, Employee employee) {
+
+		if (!repo.existsById(eid)) {
+			throw new EmployeeNotFoundException(environment.getProperty("ems.invalid.employee-notfound"));
 		}
+		repo.save(employee); // save here works as update if record exists
+		return true;
 	}
 
 	@Override
-	public Optional<Employee> findByEid(int eid) throws EmployeeNotFoundException, InvalidEmployeeObjectException {
-		if (eid > 0) {
-			if (!repo.existsById(eid)) {
-				throw new EmployeeNotFoundException();
-			}
-			Optional<Employee> employee = repo.findById(eid);
-			return employee;
-		} else {
-			throw new InvalidEmployeeObjectException();
+	public boolean deleteByEid(int eid) {
+
+		if (!repo.existsById(eid)) {
+			throw new EmployeeNotFoundException(environment.getProperty("ems.invalid.employee-notfound"));
 		}
+		repo.deleteById(eid);
+		return true;
+	}
+
+	@Override
+	public Optional<Employee> findByEid(int eid) {
+
+		if (!repo.existsById(eid)) {
+			throw new EmployeeNotFoundException(environment.getProperty("ems.invalid.employee-notfound"));
+		}
+		return repo.findById(eid);
 	}
 
 	@Override
 	public List<Employee> findAllEmployees() {
-		List<Employee> employees = (List<Employee>) repo.findAll();
-		return employees;
+		return (List<Employee>) repo.findAll();
 	}
 
 	@Override
-	public List<Employee> findByEname(String ename) throws InvalidEmployeeObjectException, EmployeeNotFoundException {
-		if (ename != null) {
-			List<Employee> employees = repo.findByEname(ename);
-			if (employees.isEmpty()) {
-				throw new EmployeeNotFoundException();
-			}
-			return employees;
-		} else {
-			throw new InvalidEmployeeObjectException();
+	public List<Employee> findByEname(String ename) {
+
+		List<Employee> employees = repo.findByempName(ename);
+		if (employees.isEmpty()) {
+			throw new EmployeeNotFoundException(environment.getProperty("ems.invalid.employee-notfound"));
 		}
+		return employees;
+
 	}
 
 	@Override
 	@Transactional
-	public boolean deleteByEname(String ename) throws InvalidEmployeeObjectException, EmployeeNotFoundException {
-		if (ename != null) {
-			int n = repo.deleteByEmpName(ename);
-			if(n == 0) {
-				throw new EmployeeNotFoundException();
-			}
-			return true;
-		} else {
-			throw new InvalidEmployeeObjectException();
+	public boolean deleteByEname(String ename) {
+
+		int n = repo.deleteByempName(ename);
+		if (n == 0) {
+			throw new EmployeeNotFoundException(environment.getProperty("ems.invalid.employee-notfound"));
 		}
+		return true;
+
 	}
 
 	@Override
 	public List<Integer> getEidsList() {
-		List<Integer> eids = repo.getEids();
-		return eids;
+		return repo.getEids();
 	}
 
 	@Override
 	public String getInfo() {
 		return repo.getInfo();
 	}
-
 }

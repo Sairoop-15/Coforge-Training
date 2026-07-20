@@ -10,28 +10,21 @@ import com.coforge.PMS.model.Product;
 public interface ProductService {
 	public boolean saveProduct(Product product) throws InvalidProductObjectException;
 
-	public boolean updateProduct(int productId, Product product)
-			throws InvalidProductObjectException, ProductNotFoundException;
+	public boolean updateProduct(int productId, Product product);
 
-	public boolean deleteProductById(int productId)
-			throws InvalidProductObjectException, ProductNotFoundException;
+	public boolean deleteProductById(int productId);
 
-	public Optional<Product> findByPid(int productId)
-			throws ProductNotFoundException, InvalidProductObjectException;
+	public Optional<Product> findByPid(int productId);
 
 	public Iterable<Product> findAllProducts();
 
-	public List<Product> findByproductName(String productName)
-			throws InvalidProductObjectException, ProductNotFoundException;
+	public List<Product> findByproductName(String productName);
 
-	public boolean deleteByProductName(String productName)
-			throws InvalidProductObjectException, ProductNotFoundException;
+	public boolean deleteByProductName(String productName);
 
-	List<Product> findByproductQuantity(int productQuantity)
-			throws InvalidProductObjectException, ProductNotFoundException;
+	List<Product> findByproductQuantity(int productQuantity);
 
-	List<Product> findByPriceRange(double minPrice, double maxPrice)
-			throws InvalidProductObjectException, ProductNotFoundException;
+	List<Product> findByPriceRange(double minPrice, double maxPrice);
 
 	List<Integer> getproductIdsList();
 
