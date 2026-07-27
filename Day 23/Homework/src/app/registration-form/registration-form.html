@@ -1,0 +1,23 @@
+<h2>Event Registration Form</h2>
+
+<label>Name:</label>
+<input type="text" [(ngModel)]="name">
+
+<br><br>
+
+<label>Email:</label>
+<input type="email" [(ngModel)]="email">
+
+<br><br>
+
+<label>Course:</label>
+<input type="text" [(ngModel)]="course">
+
+<br><br>
+
+<button (click)="register()">Register</button>
+<button (click)="reset()">Reset</button>
+
+<br><br>
+
+<h3>{{ message }}</h3>
