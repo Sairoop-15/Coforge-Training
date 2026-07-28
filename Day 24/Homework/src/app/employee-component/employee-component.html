@@ -1,0 +1,20 @@
+<h2>Employee Details</h2>
+
+<button (click)="toggleEmployee()">
+  {{ showEmployee ? 'Hide Employee' : 'Show Employee' }}
+</button>
+
+<hr>
+
+<div *ngIf="showEmployee; else noEmployee">
+
+    <p><b>Employee Id:</b> {{ employee.id }}</p>
+    <p><b>Employee Name:</b> {{ employee.name }}</p>
+    <p><b>Department:</b> {{ employee.department }}</p>
+    <p><b>Salary:</b> {{ employee.salary }}</p>
+
+</div>
+
+<ng-template #noEmployee>
+    <h3>No Employee Found</h3>
+</ng-template>

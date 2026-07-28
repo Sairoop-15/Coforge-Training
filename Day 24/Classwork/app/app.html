@@ -1,0 +1,79 @@
+<!-- <h1 class="MyHeading">Welcome to Angular</h1>
+
+<h1><b> Angular One-Way Data Binding - Interpolation </b></h1>
+
+<br><b [ngStyle]="myStyle">Name: {{ name }}</b>
+<br>Age: {{ age }}
+<br>Email: {{ email }}
+
+<br>Email : <input type="text" value="{{email}}" />
+
+<br>{{getAddition(10,20)}}
+
+<br><img src="{{imagePath}}" width="{{width}}" height="{{height}}" />
+
+<h1><b> Angular One-Way Data Binding - Property Binding </b></h1>
+
+<br>Email : <input type="text" [value]="email" />
+<br>
+<br><img [src]="imagePath" [width]="width" [height]="height" />
+
+<h1>Angular One-Way Event Binding </h1>
+
+<br>
+<button (click)="changeName()">Change Name</button>
+
+<button (click)="ZoomInOut()">Zoom in Out</button>
+
+<h1>Angular Two-Way Event Binding </h1>
+
+<br>
+Enter your First Name : <input type="text" [(ngModel)]="fname" />
+<br>
+
+Welcome {{fname}}
+
+<app-structural-directive></app-structural-directive>
+<app-addition></app-addition>
+<app-subtraction></app-subtraction>
+<app-employee-component></app-employee-component>
+
+<h1>Pipe Objects</h1>
+<div>
+  <table width="80%">
+  <tr><td>Upper Case Pipe  </td><td>{{ name | uppercase }}</td></tr>
+  <tr><td>Lower Case Pipe  </td><td>{{ name | lowercase }}</td></tr>
+  <tr><td>Title Case Pipe  </td><td>{{ name | titlecase }}</td></tr>
+  </table>
+  <hr/><br>
+  <table width="100%">
+  <tr><td>Date Pipe  </td><td>{{ date }}</td></tr>
+  <tr><td>Date Pipe  </td><td>{{ date | date: 'dd/MMM/yyyy' }}</td></tr>
+  <tr><td>Date Pipe  </td><td>{{ date | date: 'dd-MM-yy' }}</td></tr>
+  <tr><td>Date Pipe  </td><td>{{ date | date: 'fullDate' }}</td></tr>
+  <tr><td>Date Pipe  </td><td>{{ date | date: 'fullDate' | uppercase}}</td></tr>
+  <tr><td>Date Pipe  </td><td>{{ date | date: 'shortTime' }}</td></tr>
+  </table>
+  <hr/><br>
+  <table width="80%">
+  <tr><td>Percent Pipe   </td><td>{{00.54565 | percent}}</td></tr>
+  <tr><td>Currency Pipe  </td><td>{{6589.23 | currency:"USD"}}</td></tr>
+  </table>
+  </div>
+ 
+  -->
+
+<div class="myDiv">
+  <table width="100%" [cellSpacing]="15" [cellPadding]="10">
+    <tr>
+      <td><a routerLink="Home">Home</a></td>
+      <td><a routerLink="Contact">Contact</a></td>
+      <td><a routerLink="About">About</a></td>
+    </tr>
+  </table>
+  <hr />
+  <div>
+    This is the space for New Component.
+    <router-outlet></router-outlet>
+  </div>
+</div>

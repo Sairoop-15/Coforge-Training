@@ -1,0 +1,12 @@
+<div>
+    <h2>Employee Details</h2>
+    <form #employeeForm="ngForm" (ngSubmit)="saveEmployee(employeeForm.value)">
+        <div>Employee Id <input type="number" name="eid" #eid="ngModel" ngModel /></div>
+        <div>Employee Name <input type="text" name="ename" #ename="ngModel" ngModel /></div>
+        <div>Employee Email <input type="text" name="email" #email="ngModel" ngModel /></div>
+        <div>Employee Salary <input type="number" name="salary" #salary="ngModel" ngModel /></div>
+        <div>Employee DNo <input type="number" name="dno" #dno="ngModel" ngModel /></div>
+        <button type="submit">Save Employee</button>
+    </form>
+    <p>Result : {{ result }}</p>
+</div>
